@@ -8,18 +8,10 @@ Apple Photos on Mac said: "Syncing 4 Items to iCloud" and that NEVER went away.
 
 To find the culprit photos this is what I did:
 
-## Open sqlite3 for the photos
-
-This worked on my Mac and is probably similar on your's (from your home directory):
-
-```bash
-sqlite3 Pictures/Photos\ Library.photoslibrary/database/Photos.sqlite
-```
-
 ## Use the magic query
 
 ```bash
-SELECT ZORIGINALFILENAME, ZCREATIONDATE, ZIMPORTDATE, ZCLOUDMASTERGUID FROM ZCLOUDMASTER WHERE ZCLOUDLOCALSTATE = 1;
+sqlite3 ~/Pictures/Photos\ Library.photoslibrary/database/Photos.sqlite "SELECT ZORIGINALFILENAME, ZCREATIONDATE, ZIMPORTDATE, ZCLOUDMASTERGUID FROM ZCLOUDMASTER WHERE ZCLOUDLOCALSTATE = 1;"
 ```
 
 This should give you all the files that are giving you iCloud issues. The number of rows in this table should match up with the number of items that are failing to sync to iCloud.
