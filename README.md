@@ -19,16 +19,18 @@ sqlite3 Pictures/Photos\ Library.photoslibrary/database/Photos.sqlite
 ## Use the magic query
 
 ```bash
-ELECT ZORIGINALFILENAME, ZCREATIONDATE, ZIMPORTDATE, ZCLOUDMASTERGUID FROM ZCLOUDMASTER WHERE ZCLOUDLOCALSTATE = 1;
+SELECT ZORIGINALFILENAME, ZCREATIONDATE, ZIMPORTDATE, ZCLOUDMASTERGUID FROM ZCLOUDMASTER WHERE ZCLOUDLOCALSTATE = 1;
 ```
 
-This should give you all the files that are giving iCloud issues.
+This should give you all the files that are giving you iCloud issues. The number of rows in this table should match up with the number of items that are failing to sync to iCloud.
 
-## Open the troublesome photo(s)
+## Open the troublesome photo(s) with magic command one-liner
 
 ```bash
-open "photos://asset/<ZCLOUDMASTERGUID>"
+sqlite3 ~/Pictures/Photos\ Library.photoslibrary/database/Photos.sqlite "SELECT ZORIGINALFILENAME, ZCLOUDMASTERGUID FROM ZCLOUDMASTER WHERE ZCLOUDLOCALSTATE = 1;" | while IFS="|" read -r fname guid; do [ -n "$guid" ] && open ~/Pictures/Photos\ Library.photoslibrary/resources/cpl/cloudsync.noindex/storage/filecache/"${guid:0:3}"/cpl"${guid}".*; done
 ```
+
+This bad boy should open those troublesome photos so you can know exactly which ones they are, track them down, and DESTROY them!
 
 ---
 
